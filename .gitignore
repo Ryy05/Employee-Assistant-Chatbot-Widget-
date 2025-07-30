@@ -1,0 +1,9 @@
+# Ignore sensitive files
+.env
+
+# Ignore Python specific files and directories
+__pycache__/
+*.pyc
+*.ipynb_checkpoints/
+.venv/
+venv/
