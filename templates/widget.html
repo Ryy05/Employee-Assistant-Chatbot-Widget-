@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MPC Page with Chatbot</title>
+    <link rel="stylesheet" href="/static/widget.css" />
+</head>
+<body>
+    <div class="page-content">
+        <h1>Welcome to the MPC Portal</h1>
+        <p>This is a sample page. The chatbot widget is in the bottom-right corner.</p>
+        <p>You can ask it questions about our company policies.</p>
+    </div>
+
+    <button id="chatbot-open">🗪</button>
+    <div id="chatbot-hover-bubble">
+        👋🏻 Hi! How may I help you today?
+    </div>
+
+    <div id="chatbot-widget">
+        <div id="chatbot-header">
+            <span>MPC Policy Assistant</span>
+            <div>
+                <button id="chatbot-reset" title="Reset Chat">⟳</button>
+                <button id="chatbot-close" title="Close Chat">━</button>
+            </div>
+        </div>
+        <div id="chatbot-messages"></div>
+        <form id="chatbot-form">
+            <input type="text" id="chatbot-input" placeholder="Ask a question..." autocomplete="off" />
+            <button type="submit">Send</button>
+        </form>
+        <div id="suggestion-area"></div>
+    </div>
+
+    <script src="/static/widget.js"></script>
+</body>
+</html>
