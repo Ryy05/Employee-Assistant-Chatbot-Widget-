@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatInput = document.getElementById("chatbot-input");
     const suggestionArea = document.getElementById("suggestion-area");
 
-    const welcomeMessage = "Hello! How can I help you with MPC policies today?";
+    const welcomeMessage = "Welcome Employee,\n How can I help you with MPC policies today?";
 
     // --- Event Listeners ---
     openButton.addEventListener("click", () => {

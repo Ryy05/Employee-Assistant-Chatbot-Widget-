@@ -88,8 +88,9 @@ class ChatbotCore:
             "Can I bring a guest to the office?": "Visitors must be approved by your team lead and the Admin team in advance. ID verification is required.",
             "Where do I submit travel reimbursement bills?": "All travel bills must be uploaded to the Travel module of the HRMS within 7 days of the trip.",
             "What’s the policy for internal transfers?": "Internal transfers can be requested after 6 months of tenure, subject to approval from both departments.",
-            "Are Saturdays off?": "Yes! the office has a 5-day work week from Monday to Friday. Saturdays and Sundays are off"
+            "Are Saturdays off?": "Yes! the office has a 5-day work week from Monday to Friday. Saturdays and Sundays are off",
             "Saturdays working?":"No, Saturday and Sundays are off. Office is from Monday to Friday",
+            "What is the KYC Process?":"KYC process is not present in our company's policy, please contact HR at hr@mpccloudconsulting.com for more information.",
         }
         self.faq_encoder = SentenceTransformer('all-MiniLM-L6-v2')
         self.faq_questions = list(self.manual_qa.keys())
