@@ -1,0 +1,14 @@
+[
+    {
+        "employee_id": "E123",
+        "full_name": "Ryyan ",
+        "annual_leave": 12,
+        "sick_leave": 5
+    },
+    {
+        "employee_id": "E456",
+        "full_name": "Arun",
+        "annual_leave": 8,
+        "sick_leave": 2
+    }
+]
