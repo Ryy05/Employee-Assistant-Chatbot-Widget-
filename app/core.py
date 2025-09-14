@@ -14,6 +14,7 @@ from langchain.prompts import PromptTemplate
 from sentence_transformers import SentenceTransformer, util
 import torch
 from dotenv import load_dotenv
+import mimetypes
 
 load_dotenv()
 
@@ -34,19 +35,49 @@ def get_employee_data(employee_id):
     return None
 
 def send_email(to_address, subject, body, attachment_path=None):
-    """
-    Generalized email function that can handle attachments.
-    For now, it just prints a simulation to the terminal.
-    """
-    print("--- SIMULATING EMAIL SEND ---")
-    print(f"To: {to_address}")
-    print(f"Subject: {subject}")
-    print(f"Body:{body}")
-    if attachment_path:
-        # In a real scenario, you would attach the file here using smtplib
-        print(f"Attachment included: {attachment_path}")
-    print("---------------------------")
-    return True
+    # Load credentials from the .env file
+    SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+    SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+
+    if not SENDER_EMAIL or not SENDER_PASSWORD:
+        print("❌ ERROR: SENDER_EMAIL or SENDER_PASSWORD not set in .env file. Cannot send real email.")
+        # Fallback to simulation if credentials are not set
+        print("--- SIMULATING EMAIL SEND ---")
+        print(f"To: {to_address}\nSubject: {subject}\nBody:{body}")
+        if attachment_path: print(f"Attachment: {attachment_path}")
+        print("---------------------------")
+        return False
+
+    # Create the email message object
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['Subject'] = subject
+    msg['From'] = SENDER_EMAIL
+    msg['To'] = to_address
+
+    # If there is an attachment, add it to the email
+    if attachment_path and os.path.exists(attachment_path):
+        ctype, encoding = mimetypes.guess_type(attachment_path)
+        if ctype is None or encoding is not None:
+            ctype = 'application/octet-stream'
+        maintype, subtype = ctype.split('/', 1)
+        with open(attachment_path, 'rb') as fp:
+            msg.add_attachment(fp.read(),
+                               maintype=maintype,
+                               subtype=subtype,
+                               filename=os.path.basename(attachment_path))
+    
+    # Connect to the Gmail server and send the email
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login(SENDER_EMAIL, SENDER_PASSWORD)
+        server.send_message(msg)
+        server.quit()
+        print(f"✅ Email successfully sent to {to_address}")
+        return True
+    except Exception as e:
+        print(f"❌ Failed to send email: {e}")
+        return False
 
 # --- Prompt Template (Unchanged) ---
 custom_prompt_template = """Use the following pieces of context to answer the question at the end. 
@@ -152,7 +183,7 @@ class ChatbotCore:
                 conversation_state["confirmed"] = True
                 subject = f"New Leave Request from {employee_data.get('full_name', 'N/A')}"
                 body = f"Employee: {employee_data.get('full_name')} (ID: {employee_data.get('employee_id')})\nLeave Type: {conversation_state.get('leave_type')}\nDates: {conversation_state.get('dates')}"
-                send_email("hr@mpccloudconsulting.com", subject, body)
+                send_email("sunil.kumar2@mpccloudconsulting.com", subject, body)
                 self.reset_conversation_state()
                 return "Thank you. I have forwarded your leave request to the HR department. You will hear from them soon."
             else:
@@ -195,7 +226,7 @@ class ChatbotCore:
                 conversation_state["confirmed"] = True
                 subject = f"New Expense Claim from {employee_data['full_name']}"
                 body = f"Employee: {employee_data['full_name']} (ID: {employee_data['employee_id']})\nType: {conversation_state['expense_type']}\nAmount: {conversation_state['amount']}\nDate: {conversation_state['date']}"
-                send_email("finance@mpccloudconsulting.com", subject, body, conversation_state["receipt_path"])
+                send_email("sunil.kumar2@mpccloudconsulting.com", subject, body, conversation_state["receipt_path"])
                 self.reset_conversation_state()
                 return "Thank you. Your expense claim has been submitted to the finance department for approval."
             else:
